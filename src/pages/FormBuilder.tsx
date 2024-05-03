@@ -71,6 +71,7 @@ export default function FormBuilder<T extends FieldValues>() {
                   getValues={getValues}
                   label={item.elementType.label}
                   deleteIndex={handleDeleteInput}
+                  // pattern="\b\d{3}-\d{2}-\d{4}\b"  //901-23-4567
                 />
 
                 {errors[item.elementType.name] && preview && (

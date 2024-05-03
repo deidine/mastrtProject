@@ -1,15 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 
-type InputProps = {
-  name: string;
-  type: string;
-  index: number;
-  placeholder: string;
-  deleteIndex: (index: number) => void;
-  label: string;
-  preview: boolean;
-} & { register: any; getValues: any };
-
 export default function InputComponent({
   name,
   label,
@@ -18,10 +8,22 @@ export default function InputComponent({
   deleteIndex,
   index,
   preview,
+  minLength,
+  maxLength,
+  disabled,
+  min,
+  max,
   register,
+  pattern,
 }: InputProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isRequired, setIsRequired] = useState(false); // State to track if input is required
   const menuRef = useRef<HTMLDivElement>(null);
+  const regPattern = pattern
+    ? typeof pattern === "string"
+      ? new RegExp(pattern)
+      : { value: new RegExp(pattern.value), message: pattern.message }
+    : undefined;
 
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
@@ -36,6 +38,10 @@ export default function InputComponent({
       window.removeEventListener("mousedown", handleOutsideClick);
     };
   }, []);
+
+  const toggleRequired = () => {
+    setIsRequired(!isRequired); // Toggle required state
+  };
 
   return (
     <div className="relative mb-2 group">
@@ -75,15 +81,22 @@ export default function InputComponent({
       <input
         {...register(name, {
           required: {
-            value: true,
+            value: isRequired,
             message: "Name is required",
           },
+          minLength,
+          maxLength,
+          disabled,
+          min,
+          max,
+          pattern: regPattern, // Include pattern in validation rules
         })}
         className="   h-10  text-sm focus-visible:outline-none
                  focus-visible:ring-2 focus-visible:bg-white   border-zinc-200 duration-100 placeholder:text-zinc-400 ring-2 ring-transparent
                  focus:bg-white focus-visible:ring-indigo-400 shadow-sm   py-2 px-3 w-full rounded-lg border"
         type={type}
         placeholder={placeholder}
+        // required={isRequired}
       />
       {!preview ? (
         <button
@@ -118,11 +131,37 @@ export default function InputComponent({
             className="-mx-1 my-1 h-px bg-zinc-100 dark:bg-zinc-800"
           ></div>
           <ul className="flex  flex-col p-1 space-y-2 rounded-lg px-1 py-1">
-            <li className="py-2  px-4 hover:bg-gray-100 font-medium  cursor-pointer">
-              Menu Item 1
-            </li>
-            <li className="py-2  px-4 hover:bg-gray-100 font-medium  cursor-pointer">
-              Menu Item 2
+            <li
+              className="py-2  space-y-2 px-4 hover:bg-gray-100 font-medium  cursor-pointer"
+              onClick={toggleRequired} // Toggle input required state
+            >
+           {/* {isRequired ? "Required: Yes" : "Required: No"} */}
+              <div className="flex items-center justify-between hover:bg-zinc-100 rounded-lg px-1 py-1">
+                <label
+                  className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70
+                 font-normal flex-1 text-zinc-600"
+                >
+                  Required {"   "}
+                </label>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={isRequired}
+                  data-state={isRequired ? "checked" : "unchecked"}
+                  value="on"
+                  className="peer inline-flex shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent
+                   transition-colors focus-visible:outline-none focus-visible:ring-2
+                    focus-visible:ring-zinc-950 focus-visible:ring-offset-2 focus-visible:ring-offset-white 
+                    disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-zinc-900 data-[state=unchecked]:bg-zinc-200 dark:focus-visible:ring-zinc-300 dark:focus-visible:ring-offset-zinc-950 dark:data-[state=checked]:bg-zinc-50 dark:data-[state=unchecked]:bg-zinc-800 h-5 w-10"
+                  id="required"
+                >
+                  <span
+                    data-state={isRequired ? "checked" : "unchecked"}
+                    className="pointer-events-none block rounded-full bg-white shadow-lg 
+                    ring-0 transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0 dark:bg-zinc-950 h-4 w-4"
+                  ></span>
+                </button>
+              </div>
             </li>
             <li
               className="inline-flex items-center whitespace-nowrap font-medium  py-2  px-4 hover:bg-gray-100 cursor-pointer"
