@@ -34,13 +34,14 @@ export default function FomCodeGenarator({ allElements }: CodeGenaratorProps) {
 `;
 
     setComponentCode(exportCode);
-    setIsModalOpen(true); // Open the modal after generating code
+    setIsModalOpen(true);  
   };
 
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(componentCode);
       alert("Copied to clipboard!");
+      setIsModalOpen(false)
     } catch (error) {
       console.error("Failed to copy:", error);
       alert("Failed to copy to clipboard!");
@@ -50,7 +51,9 @@ export default function FomCodeGenarator({ allElements }: CodeGenaratorProps) {
   return (
     <>
       <button
-        className="border border-zinc-200 bg-white hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-800 dark:hover:text-zinc-50 h-9 px-3 rounded-lg text-zinc-800 w-14"
+        className="border border-zinc-200 bg-white hover:bg-zinc-100
+  h-9 rounded-lg
+           text-zinc-800  "
         type="button"
         onClick={generateComponentCode}
       >
