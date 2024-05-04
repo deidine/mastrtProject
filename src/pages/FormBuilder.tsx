@@ -63,7 +63,7 @@ export default function FormBuilder<T extends FieldValues>() {
           className="p-4 m-2 w-full mx-auto "
           onSubmit={preview ? handleSubmit(onSubmit) : undefined}
         >
-          <DragDropContext onDragEnd={handleOnDragEnd}>
+          <DragDropContext onDragEnd={  handleOnDragEnd}>
             <Droppable droppableId="data" type="COLUMN" direction="vertical">
               {(provided) => (
                 <div
@@ -74,8 +74,10 @@ export default function FormBuilder<T extends FieldValues>() {
                   {elements.map((item, index) => (
                     <Draggable
                       key={index}
-                      draggableId={"" + index}
+                      draggableId={ ""+index}
+                      // draggableId={ preview ? "" :""+index}
                       index={index}
+                      isDragDisabled={preview}
                     >
                       {(provided) => (
                         <div
@@ -84,6 +86,7 @@ export default function FormBuilder<T extends FieldValues>() {
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                         >
+                      
                           <InputComponent
                             preview={preview}
                             name={item.elementType.name}
