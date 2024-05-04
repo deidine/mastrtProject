@@ -14,10 +14,11 @@ export default function InputComponent({
   min,
   max,
   register,
+  style,
   pattern,
 }: InputProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isRequired, setIsRequired] = useState(false); // State to track if input is required
+  const [isRequired, setIsRequired] = useState(true); // State to track if input is required
   const menuRef = useRef<HTMLDivElement>(null);
   const regPattern = pattern
     ? typeof pattern === "string"
@@ -91,12 +92,12 @@ export default function InputComponent({
           max,
           pattern: regPattern, // Include pattern in validation rules
         })}
-        className="   h-10  text-sm focus-visible:outline-none
+        className={`h-10  text-sm focus-visible:outline-none
                  focus-visible:ring-2 focus-visible:bg-white   border-zinc-200 duration-100 placeholder:text-zinc-400 ring-2 ring-transparent
-                 focus:bg-white focus-visible:ring-indigo-400 shadow-sm   py-2 px-3 w-full rounded-lg border"
+                 focus:bg-white focus-visible:ring-indigo-400 shadow-sm  
+                  py-2 px-3 w-full rounded-lg border ${style}`}
         type={type}
-        placeholder={placeholder}
-        // required={isRequired}
+        placeholder={placeholder} 
       />
       {!preview ? (
         <button
@@ -135,7 +136,7 @@ export default function InputComponent({
               className="py-2  space-y-2 px-4 hover:bg-gray-100 font-medium  cursor-pointer"
               onClick={toggleRequired} // Toggle input required state
             >
-           {/* {isRequired ? "Required: Yes" : "Required: No"} */}
+              {/* {isRequired ? "Required: Yes" : "Required: No"} */}
               <div className="flex items-center justify-between hover:bg-zinc-100 rounded-lg px-1 py-1">
                 <label
                   className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70

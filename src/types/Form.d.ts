@@ -24,7 +24,7 @@ type FormElement = {
     max?: ReactHookFormPropertiesRestrictions<number>;
     required?: boolean | string;
     disabled?: boolean;
-    className?: string;
+    style?: string;
     
   };
   

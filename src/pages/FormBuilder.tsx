@@ -2,11 +2,14 @@ import React, { useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import InputComponent from "../components/InputComponent";
 import FomCodeGenarator from "./FomCodeGenarator";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
 export default function FormBuilder<T extends FieldValues>() {
-  const [preview, setPreview] = useState(false);
-
   const allElements: FormElement[] = [];
+
+  const [elements, setElements] = useState<FormElement[]>(allElements);
+  const [preview, setPreview] = useState(false);
+  const [submitBtn, setSubmitBtn] = useState("Submit");
 
   const {
     register,
@@ -28,15 +31,10 @@ export default function FormBuilder<T extends FieldValues>() {
     setElements((prev) => [...prev, newElement]);
   };
 
-  const [elements, setElements] = useState<FormElement[]>(allElements);
-
   const onSubmit = (data: any) => {
     if (preview) {
       console.log(getValues());
       console.log(data);
-      // for (var key in data) {
-      //   console.log(data[key].name);
-      // }
     }
     console.log(errors);
   };
@@ -45,6 +43,13 @@ export default function FormBuilder<T extends FieldValues>() {
     setElements((prevData) => prevData.filter((_, i) => i !== index));
   };
 
+  function handleOnDragEnd(result: any) {
+    if (!result.destination) return;
+    const items = Array.from(elements);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+    setElements(items);
+  }
   return (
     <>
       <TopBarTest
@@ -58,47 +63,73 @@ export default function FormBuilder<T extends FieldValues>() {
           className="p-4 m-2 w-full mx-auto "
           onSubmit={preview ? handleSubmit(onSubmit) : undefined}
         >
-          <div className="w-1/4 mx-auto">
-            {elements.map((item, index) => (
-              <div key={index}>
-                <InputComponent
-                  preview={preview}
-                  name={item.elementType.name}
-                  type={item.elementType.type}
-                  index={index}
-                  placeholder={item.elementType.placeholder}
-                  register={register}
-                  getValues={getValues}
-                  label={item.elementType.label}
-                  deleteIndex={handleDeleteInput}
-                  // pattern="\b\d{3}-\d{2}-\d{4}\b"  //901-23-4567
-                />
+          <DragDropContext onDragEnd={handleOnDragEnd}>
+            <Droppable droppableId="data" type="COLUMN" direction="vertical">
+              {(provided) => (
+                <div
+                  className="w-1/4 mx-auto"
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                >
+                  {elements.map((item, index) => (
+                    <Draggable
+                      key={index}
+                      draggableId={"" + index}
+                      index={index}
+                    >
+                      {(provided) => (
+                        <div
+                          key={index}
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          <InputComponent
+                            preview={preview}
+                            name={item.elementType.name}
+                            type={item.elementType.type}
+                            index={index}
+                            placeholder={item.elementType.placeholder}
+                            register={register}
+                            getValues={getValues}
+                            label={item.elementType.label}
+                            deleteIndex={handleDeleteInput}
+                            // pattern="\b\d{3}-\d{2}-\d{4}\b"  //901-23-4567
+                            // style={"bg-black"}
+                          />
 
-                {errors[item.elementType.name] && preview && (
-                  <span className="text-sm text-red-500">
-                    This field is required
-                  </span>
-                )}
-              </div>
-            ))}
+                          {errors[item.elementType.name] && preview && (
+                            <span className="text-sm text-red-500">
+                              This field is required
+                            </span>
+                          )}
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
 
-            <button
-              className="bg-black font-semibold text-white rounded-lg w-full
+                  <button
+                    className="bg-black font-semibold text-white rounded-lg w-full
                justify-center items-center p-1 mx-auto flex"
-              disabled={!preview} // Disable button in preview mode
-            >
-              {preview ? (
-                "Submit"
-              ) : (
-                <input
-                  className="outline-none 
+                    disabled={!preview} // Disable button in preview mode
+                  >
+                    {preview ? (
+                      submitBtn
+                    ) : (
+                      <input
+                        className="outline-none 
       shadow-md
       bg-transparent w-full text-center"
-                  value="Submit"
-                />
+                        value={submitBtn}
+                        onChange={(e) => setSubmitBtn(e.target.value)}
+                      />
+                    )}
+                  </button>
+                </div>
               )}
-            </button>
-          </div>
+            </Droppable>
+          </DragDropContext>
         </form>
       </div>
 
