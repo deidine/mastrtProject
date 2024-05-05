@@ -7,6 +7,8 @@ type FormElement = {
     placeholder: string;
     value?: string;
     label: string;
+    style?: string;
+
   };
    type ReactHookFormPropertiesRestrictions<T> =
   | {
@@ -24,12 +26,12 @@ type FormElement = {
     max?: ReactHookFormPropertiesRestrictions<number>;
     required?: boolean | string;
     disabled?: boolean;
-    style?: string;
     
   };
   
   
 type InputProps = {
+  
   index: number;
   deleteIndex: (index: number) => void;
   preview: boolean;

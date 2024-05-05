@@ -3,6 +3,7 @@ import { FieldValues, useForm } from "react-hook-form";
 import InputComponent from "../components/InputComponent";
 import FomCodeGenarator from "./FomCodeGenarator";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import PreviewForm from "./PreviewForm"; 
 
 export default function FormBuilder<T extends FieldValues>() {
   const allElements: FormElement[] = [];
@@ -26,6 +27,7 @@ export default function FormBuilder<T extends FieldValues>() {
         name: "" + Date.now(),
         placeholder: "enter your data",
         value: "",
+        style:"h-10  text-sm focus-visible:outline-none   focus-visible:ring-2 focus-visible:bg-white   border-zinc-200 duration-100 placeholder:text-zinc-400 ring-2 ring-transparent focus:bg-white focus-visible:ring-indigo-400 shadow-sm    py-2 px-3 w-full rounded-lg border"
       },
     };
     setElements((prev) => [...prev, newElement]);
@@ -57,15 +59,14 @@ export default function FormBuilder<T extends FieldValues>() {
         setPreview={setPreview}
         elements={elements}
       />
-
-      <div className="container w-full h-full bg-white rounded-lg border mt-4 mx-auto">
+      <div className="container w-full h-full bg-white rounded-lg border mt-4 shadow-sm mx-auto">
         <form
           className="p-4 m-2 w-full mx-auto "
-          onSubmit={preview ? handleSubmit(onSubmit) : undefined}
+          onSubmit={handleSubmit(onSubmit)}
         >
-          <DragDropContext onDragEnd={  handleOnDragEnd}>
+          <DragDropContext onDragEnd={handleOnDragEnd}>
             <Droppable droppableId="data" type="COLUMN" direction="vertical">
-              {(provided) => (
+              {(provided, snapshot) => (
                 <div
                   className="w-1/4 mx-auto"
                   ref={provided.innerRef}
@@ -74,8 +75,7 @@ export default function FormBuilder<T extends FieldValues>() {
                   {elements.map((item, index) => (
                     <Draggable
                       key={index}
-                      draggableId={ ""+index}
-                      // draggableId={ preview ? "" :""+index}
+                      draggableId={"" + index}
                       index={index}
                       isDragDisabled={preview}
                     >
@@ -86,7 +86,6 @@ export default function FormBuilder<T extends FieldValues>() {
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                         >
-                      
                           <InputComponent
                             preview={preview}
                             name={item.elementType.name}
@@ -98,7 +97,7 @@ export default function FormBuilder<T extends FieldValues>() {
                             label={item.elementType.label}
                             deleteIndex={handleDeleteInput}
                             // pattern="\b\d{3}-\d{2}-\d{4}\b"  //901-23-4567
-                            // style={"bg-black"}
+                            style={item.elementType.style}
                           />
 
                           {errors[item.elementType.name] && preview && (
@@ -115,15 +114,13 @@ export default function FormBuilder<T extends FieldValues>() {
                   <button
                     className="bg-black font-semibold text-white rounded-lg w-full
                justify-center items-center p-1 mx-auto flex"
-                    disabled={!preview} // Disable button in preview mode
+                    disabled={!preview}
                   >
                     {preview ? (
                       submitBtn
                     ) : (
                       <input
-                        className="outline-none 
-      shadow-md
-      bg-transparent w-full text-center"
+                        className="outline-none  shadow-md bg-transparent w-full text-center"
                         value={submitBtn}
                         onChange={(e) => setSubmitBtn(e.target.value)}
                       />
@@ -147,7 +144,7 @@ export default function FormBuilder<T extends FieldValues>() {
         >
           Insert element
         </button>
-      </div>
+      </div> 
     </>
   );
 }

@@ -10,38 +10,58 @@ export default function FomCodeGenarator({ allElements }: CodeGenaratorProps) {
 
   const generateComponentCode = () => {
     const componentCode = allElements.map((input, index) => {
-      return `<input
+      return `
+      <label>${input.elementType.label}</label>
+      <input
       key={${index}}
+      className="${input.elementType.style}"
       type="${input.elementType.type}"
-      label="${input.elementType.label}"
+    
       name="${input.elementType.name}"
       placeholder="${input.elementType.placeholder}" 
-      index={${index}} />`;
+      />`;
     });
+    // import React from 'react';
 
+    // const GeneratedForm = () => {
+    //   return (
     const exportCode = `
-  import React from 'react';
- 
-  const GeneratedForm = () => {
-    return (
-      <form>
-        ${componentCode.join("\n")}
-      </form>
-    );
-  };
+    <div className="container w-full h-full bg-white rounded-lg border mt-4 mx-auto">
 
-  export default GeneratedForm;
-`;
+      <form
+      className="p-4 m-2 w-full mx-auto "
+      
+      >
+      <div
+      className="w-1/4 mx-auto"
+>
+      <div className="relative mb-2 group">
+      
+      ${componentCode.join("\n")}
+      </div>
+      </div>
+      <br/>
+        <button type="submit" 
+        className="bg-black font-semibold text-white rounded-lg w-full
+               justify-center items-center p-1 mx-auto flex"
+        >Submit</button>
+      </form>
+      </div>
+      `;
+    //   );
+    // };
+
+    // export default GeneratedForm;
 
     setComponentCode(exportCode);
-    setIsModalOpen(true);  
+    setIsModalOpen(true);
   };
 
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(componentCode);
       alert("Copied to clipboard!");
-      setIsModalOpen(false)
+      setIsModalOpen(false);
     } catch (error) {
       console.error("Failed to copy:", error);
       alert("Failed to copy to clipboard!");
@@ -59,7 +79,7 @@ export default function FomCodeGenarator({ allElements }: CodeGenaratorProps) {
       >
         Export Form
       </button>
-      
+
       {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-10 flex overflow-y-auto items-center w-full justify-center bg-gray-900 bg-opacity-50">

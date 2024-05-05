@@ -16,6 +16,7 @@ export default function InputComponent({
   register,
   style,
   pattern,
+  
 }: InputProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isRequired, setIsRequired] = useState(true); // State to track if input is required
@@ -92,12 +93,9 @@ export default function InputComponent({
           max,
           pattern: regPattern, // Include pattern in validation rules
         })}
-        className={`h-10  text-sm focus-visible:outline-none
-                 focus-visible:ring-2 focus-visible:bg-white   border-zinc-200 duration-100 placeholder:text-zinc-400 ring-2 ring-transparent
-                 focus:bg-white focus-visible:ring-indigo-400 shadow-sm  
-                  py-2 px-3 w-full rounded-lg border ${style}`}
+        className={`${style}`}
         type={type}
-        placeholder={placeholder} 
+        placeholder={placeholder}
       />
       {!preview ? (
         <button
