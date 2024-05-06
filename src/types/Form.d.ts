@@ -8,6 +8,7 @@ type FormElement = {
     value?: string;
     label: string;
     style?: string;
+    required?: boolean ;
 
   };
    type ReactHookFormPropertiesRestrictions<T> =
@@ -24,7 +25,6 @@ type FormElement = {
     pattern?: ReactHookFormPropertiesRestrictions<string>;
     min?: ReactHookFormPropertiesRestrictions<number>;
     max?: ReactHookFormPropertiesRestrictions<number>;
-    required?: boolean | string;
     disabled?: boolean;
     
   };

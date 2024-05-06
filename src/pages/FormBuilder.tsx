@@ -1,48 +1,52 @@
+import { v4 as uuidv4 } from "uuid";
 import React, { useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import InputComponent from "../components/InputComponent";
-import FomCodeGenarator from "./FomCodeGenarator";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import PreviewForm from "./PreviewForm"; 
 
-export default function FormBuilder<T extends FieldValues>() {
-  const allElements: FormElement[] = [];
-
+export default function FormBuilder({
+  preview,
+  allElements,
+  addNewElement,
+  setSubmitBtn,
+  submitBtn,
+}: {
+  preview: boolean;
+  allElements: FormElement[];
+  addNewElement: (elem: FormElement[]) => void;
+  setSubmitBtn: (value: string) => void;
+  submitBtn: string;
+}) {
   const [elements, setElements] = useState<FormElement[]>(allElements);
-  const [preview, setPreview] = useState(false);
-  const [submitBtn, setSubmitBtn] = useState("Submit");
 
   const {
     register,
-    handleSubmit,
     formState: { errors },
     getValues,
   } = useForm({ mode: "all" });
 
   const addElement = () => {
+    const newUUID: string = uuidv4();
+
     const newElement = {
       elementType: {
         type: "text",
-        label: "Test",
-        name: "" + Date.now(),
+        label: "Test" + newUUID,
+        name: "" + newUUID,
         placeholder: "enter your data",
         value: "",
-        style:"h-10  text-sm focus-visible:outline-none   focus-visible:ring-2 focus-visible:bg-white   border-zinc-200 duration-100 placeholder:text-zinc-400 ring-2 ring-transparent focus:bg-white focus-visible:ring-indigo-400 shadow-sm    py-2 px-3 w-full rounded-lg border"
+        style:
+          "h-10  text-sm focus-visible:outline-none   focus-visible:ring-2 focus-visible:bg-white   border-zinc-200 duration-100 placeholder:text-zinc-400 ring-2 ring-transparent focus:bg-white focus-visible:ring-indigo-400 shadow-sm    py-2 px-3 w-full rounded-lg border",
       },
     };
     setElements((prev) => [...prev, newElement]);
-  };
-
-  const onSubmit = (data: any) => {
-    if (preview) {
-      console.log(getValues());
-      console.log(data);
-    }
-    console.log(errors);
+    addNewElement([...elements, newElement]);
   };
 
   const handleDeleteInput = (index: number) => {
-    setElements((prevData) => prevData.filter((_, i) => i !== index));
+    const updatedElements = elements.filter((_, i) => i !== index);
+    setElements(updatedElements);
+    addNewElement(updatedElements);
   };
 
   function handleOnDragEnd(result: any) {
@@ -51,19 +55,13 @@ export default function FormBuilder<T extends FieldValues>() {
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
     setElements(items);
+    addNewElement(items);
   }
+
   return (
     <>
-      <TopBarTest
-        preview={preview}
-        setPreview={setPreview}
-        elements={elements}
-      />
       <div className="container w-full h-full bg-white rounded-lg border mt-4 shadow-sm mx-auto">
-        <form
-          className="p-4 m-2 w-full mx-auto "
-          onSubmit={handleSubmit(onSubmit)}
-        >
+        <form className="p-4 m-2 w-full mx-auto ">
           <DragDropContext onDragEnd={handleOnDragEnd}>
             <Droppable droppableId="data" type="COLUMN" direction="vertical">
               {(provided, snapshot) => (
@@ -85,7 +83,7 @@ export default function FormBuilder<T extends FieldValues>() {
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
-                        >
+                        > 
                           <InputComponent
                             preview={preview}
                             name={item.elementType.name}
@@ -97,10 +95,23 @@ export default function FormBuilder<T extends FieldValues>() {
                             label={item.elementType.label}
                             deleteIndex={handleDeleteInput}
                             // pattern="\b\d{3}-\d{2}-\d{4}\b"  //901-23-4567
+                            required={item.elementType.required}
                             style={item.elementType.style}
+                            isPassWordRequired={(value: boolean) => {
+ 
+                              console.log("deidine");
+                              const updatedElements = [...elements];
+                              updatedElements[index ].elementType.required = value;
+                              console.log(
+                                updatedElements[index].elementType.required
+                              );
+                              console.log(updatedElements);
+                              setElements(updatedElements);
+                              addNewElement(updatedElements);
+                            }}
                           />
 
-                          {errors[item.elementType.name] && preview && (
+                          {errors[item.elementType.name] && (
                             <span className="text-sm text-red-500">
                               This field is required
                             </span>
@@ -144,40 +155,7 @@ export default function FormBuilder<T extends FieldValues>() {
         >
           Insert element
         </button>
-      </div> 
-    </>
-  );
-}
-
-export function TopBarTest({
-  preview,
-  setPreview,
-  elements,
-}: {
-  preview: boolean;
-  elements: FormElement[];
-  setPreview: React.Dispatch<React.SetStateAction<boolean>>;
-}) {
-  return (
-    <div className="py-3 border-b max-w-2xl mx-auto mt-3 border shadow-sm rounded-xl">
-      <div dir="ltr" data-orientation="horizontal" className="w-60 mx-auto">
-        <div className="inline-flex gap-x-3 h-10 items-center justify-center p-1 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400 w-full rounded-lg text-sm bg-zinc-50">
-          {/* <button className="btn2 border border-zinc-200 bg-white hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-800 dark:hover:text-zinc-50 h-9 px-3 rounded-lg text-zinc-800 w-14">
-            Save
-          </button> */}
-
-          <button
-            className="btn2 hover:bg-zinc-900/90 h-9 px-3 rounded-lg border
-            bg-zinc-100 text-zinc-800 hover:text-white"
-            onClick={() => {
-              setPreview(!preview);
-            }}
-          >
-            {preview ? "Edit" : "Preview"}
-          </button>
-          <FomCodeGenarator allElements={elements} />
-        </div>
       </div>
-    </div>
+    </>
   );
 }

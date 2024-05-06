@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 
 export default function InputComponent({
   name,
@@ -15,9 +15,9 @@ export default function InputComponent({
   max,
   register,
   style,
+  isPassWordRequired,
   pattern,
-  
-}: InputProps) {
+}: InputProps & { isPassWordRequired?: (value: boolean) => void }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isRequired, setIsRequired] = useState(true); // State to track if input is required
   const menuRef = useRef<HTMLDivElement>(null);
@@ -43,6 +43,7 @@ export default function InputComponent({
 
   const toggleRequired = () => {
     setIsRequired(!isRequired); // Toggle required state
+    isPassWordRequired!(!isRequired);
   };
 
   return (
@@ -80,23 +81,32 @@ export default function InputComponent({
         {label}
         {index}
       </label>
-      <input
-        {...register(name, {
-          required: {
-            value: isRequired,
-            message: "Name is required",
-          },
-          minLength,
-          maxLength,
-          disabled,
-          min,
-          max,
-          pattern: regPattern, // Include pattern in validation rules
-        })}
-        className={`${style}`}
-        type={type}
-        placeholder={placeholder}
-      />
+      {preview ? (
+        <input
+          {...register(name, {
+            required: {
+              value: isRequired,
+              message: "Name is required",
+            },
+            minLength,
+            maxLength,
+            disabled,
+            min,
+            max,
+            pattern: regPattern,
+          })}
+          className={`${style}`}
+          type={type}
+          placeholder={placeholder}
+        />
+      ) : (
+        <input
+          {...register(name, {})}
+          className={`${style}`}
+          type={type}
+          placeholder={placeholder}
+        />
+      )}
       {!preview ? (
         <button
           className="absolute w-6 inline-block text-right h-fit top-0 bottom-0
@@ -132,9 +142,8 @@ export default function InputComponent({
           <ul className="flex  flex-col p-1 space-y-2 rounded-lg px-1 py-1">
             <li
               className="py-2  space-y-2 px-4 hover:bg-gray-100 font-medium  cursor-pointer"
-              onClick={toggleRequired} // Toggle input required state
+              onClick={toggleRequired}
             >
-              {/* {isRequired ? "Required: Yes" : "Required: No"} */}
               <div className="flex items-center justify-between hover:bg-zinc-100 rounded-lg px-1 py-1">
                 <label
                   className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70
