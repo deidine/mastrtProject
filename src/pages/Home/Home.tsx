@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import PreviewForm from "./PreviewForm";
-import FormBuilder from "./FormBuilder";
-import FomCodeGenarator from "./FomCodeGenarator";
-
+import PreviewForm from "../../components/Forms/FormPreview/PreviewForm";
+import FormBuilder from "../../components/Forms/FormBuilder/FormBuilder";
+import FomCodeGenarator from "../../components/Forms/FormCodeGenarator/FomCodeGenarator";
 export default function Home() {
   const [submitBtn, setSubmitBtn] = useState("Submit");
   const [elements, setElements] = useState<FormElement[]>([]);
@@ -17,23 +16,27 @@ export default function Home() {
               onClick={() => {
                 setPreview(true);
               }}
-              className="btn2 border border-zinc-200 bg-white hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-800 dark:hover:text-zinc-50 h-9 px-3 rounded-lg text-zinc-800 w-14"
-     
+              className={`btn2 border border-zinc-200   hover:bg-zinc-900/90   hover:text-white   h-9 px-3 rounded-lg text-zinc-800  ${
+                !preview
+                  ? "bg-zinc-100 text-zinc-800"
+                  : "bg-white text-black font-semibold"
+              }`}
             >
               Preview
             </button>
-
             <button
-              className="btn2 hover:bg-zinc-900/90 h-9 px-3 rounded-lg border
-            bg-zinc-100 text-zinc-800 hover:text-white"
+              className={`btn2 hover:bg-zinc-900/90 h-9 px-3 rounded-lg border    hover:text-white ${
+                preview
+                  ? "bg-zinc-100 text-zinc-800"
+                  : "bg-white text-black font-semibold"
+              }`}
               onClick={() => {
                 setPreview(false);
               }}
-       
-
             >
               Edit
             </button>
+
             <FomCodeGenarator allElements={elements} />
           </div>
         </div>
@@ -48,14 +51,8 @@ export default function Home() {
         <FormBuilder
           preview={preview}
           allElements={elements}
-          addNewElement={(elem: FormElement[]) => {
-            console.log("fetouh");
-            setElements(elem);
-            console.log(elem);
-          }}
-          setSubmitBtn={(value: string) => {
-            setSubmitBtn(value);
-          }}
+          addNewElement={(elem: FormElement[]) => setElements(elem)}
+          setSubmitBtn={(value: string) => setSubmitBtn(value)}
           submitBtn={submitBtn}
         />
       )}

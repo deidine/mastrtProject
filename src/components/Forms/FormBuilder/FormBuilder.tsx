@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import React, { useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
-import InputComponent from "../components/InputComponent";
+import InputComponent from "../../Input/InputComponent";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
 export default function FormBuilder({
@@ -18,7 +18,6 @@ export default function FormBuilder({
   submitBtn: string;
 }) {
   const [elements, setElements] = useState<FormElement[]>(allElements);
-
   const {
     register,
     formState: { errors },
@@ -27,14 +26,14 @@ export default function FormBuilder({
 
   const addElement = () => {
     const newUUID: string = uuidv4();
-
     const newElement = {
       elementType: {
         type: "text",
-        label: "Test" + newUUID,
-        name: "" + newUUID,
+        label: "Label",
+        name: newUUID,
         placeholder: "enter your data",
         value: "",
+        required: true,
         style:
           "h-10  text-sm focus-visible:outline-none   focus-visible:ring-2 focus-visible:bg-white   border-zinc-200 duration-100 placeholder:text-zinc-400 ring-2 ring-transparent focus:bg-white focus-visible:ring-indigo-400 shadow-sm    py-2 px-3 w-full rounded-lg border",
       },
@@ -83,8 +82,9 @@ export default function FormBuilder({
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
-                        > 
+                        >
                           <InputComponent
+                            key={item.elementType.name}
                             preview={preview}
                             name={item.elementType.name}
                             type={item.elementType.type}
@@ -94,24 +94,24 @@ export default function FormBuilder({
                             getValues={getValues}
                             label={item.elementType.label}
                             deleteIndex={handleDeleteInput}
-                            // pattern="\b\d{3}-\d{2}-\d{4}\b"  //901-23-4567
+                            pattern={item.elementType.pattern} //901-23-4567
                             required={item.elementType.required}
                             style={item.elementType.style}
                             isPassWordRequired={(value: boolean) => {
- 
-                              console.log("deidine");
                               const updatedElements = [...elements];
-                              updatedElements[index ].elementType.required = value;
-                              console.log(
-                                updatedElements[index].elementType.required
-                              );
-                              console.log(updatedElements);
-                              setElements(updatedElements);
+                              updatedElements[
+                                index
+                              ].elementType.required = value;
+                              addNewElement(updatedElements);
+                            }}
+                            setLabel={(value: string) => {
+                              const updatedElements = [...elements];
+                              updatedElements[index].elementType.label = value;
                               addNewElement(updatedElements);
                             }}
                           />
 
-                          {errors[item.elementType.name] && (
+                          {errors[item.elementType.label] && (
                             <span className="text-sm text-red-500">
                               This field is required
                             </span>
