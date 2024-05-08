@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import PreviewForm from "../../components/Forms/FormPreview/PreviewForm";
 import FormBuilder from "../../components/Forms/FormBuilder/FormBuilder";
 import FomCodeGenarator from "../../components/Forms/FormCodeGenarator/FomCodeGenarator";
+
 export default function Home() {
   const [submitBtn, setSubmitBtn] = useState("Submit");
   const [elements, setElements] = useState<FormElement[]>([]);
@@ -10,6 +11,7 @@ export default function Home() {
   return (
     <div>
       <div className="py-3 border-b max-w-2xl mx-auto mt-3 border shadow-sm rounded-xl">
+
         <div dir="ltr" data-orientation="horizontal" className="w-60 mx-auto">
           <div className="inline-flex gap-x-3 h-10 items-center justify-center p-1 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400 w-full rounded-lg text-sm bg-zinc-50">
             <button
@@ -38,7 +40,7 @@ export default function Home() {
             </button>
 
             <FomCodeGenarator allElements={elements} />
-          </div>
+              </div>
         </div>
       </div>
       {preview ? (

@@ -20,10 +20,14 @@ export default function InputComponent({
   isPassWordRequired,
   setLabel,
   pattern,
+  setStyle,
+  isSideBarOpen,
 }: InputProps & {
   isPassWordRequired?: (value: boolean) => void;
   setLabel?: (value: string) => void;
   deleteIndex?: (index: number) => void;
+  setStyle?: (style: string) => void;
+  isSideBarOpen?: (isOpen: boolean,index:number) => void;
 }) {
   const [inputValue, setInputValue] = useState(label); // Initialize state with label value if present
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -67,7 +71,6 @@ export default function InputComponent({
             <circle cx="15" cy="19" r="1"></circle>
           </svg>
         </button>
-        
       ) : (
         ""
       )}
@@ -103,12 +106,23 @@ export default function InputComponent({
           placeholder={placeholder}
         />
       ) : (
-        <input
-          {...register(name, {})}
-          className={`${style}`}
-          type={type}
-          placeholder={placeholder}
-        />
+        <>
+          {" "}
+          <input
+            name={name}
+            className={`${style}`}
+            type={type}
+            placeholder={placeholder}
+          />
+          <button
+            type="button"
+            onClickCapture={() => {
+              setStyle!("bg-black");
+            }}
+          >
+            bg-red
+          </button>
+        </>
       )}
       {!preview ? (
         <button
@@ -134,8 +148,8 @@ export default function InputComponent({
       {isMenuOpen && (
         <PopUpMenu
           required={required!}
-          isOpen={(value:boolean)=>{
-            setIsMenuOpen(value)
+          isOpen={(value: boolean) => {
+            setIsMenuOpen(value);
           }}
           isPassWordRequired={(value: boolean) => {
             isPassWordRequired!(value);
@@ -144,6 +158,9 @@ export default function InputComponent({
             deleteIndex!(index);
           }}
           index={index}
+          isSideOpen={(value: boolean,index:number) => {
+            isSideBarOpen!(value,index);
+          }}
         />
       )}
     </div>

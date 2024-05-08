@@ -1,8 +1,9 @@
 import { v4 as uuidv4 } from "uuid";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import InputComponent from "../../Input/InputComponent";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import Sidebar from "../../SideBar";
 
 export default function FormBuilder({
   preview,
@@ -18,11 +19,19 @@ export default function FormBuilder({
   submitBtn: string;
 }) {
   const [elements, setElements] = useState<FormElement[]>(allElements);
+  const [stileSid, setStyleSide] = useState("");
   const {
     register,
     formState: { errors },
     getValues,
   } = useForm({ mode: "all" });
+  const [isSideOpen, setIsSideOpen] = useState(false);
+  const [inputIndex, setInputIndex] = useState<number>(0);
+  // useEffect(() => {
+  //   const updatedElements = [...elements];
+  //   updatedElements[inputIndex].elementType.style += " " + stileSid;
+  //   addNewElement(updatedElements);
+  // }, [stileSid]);
 
   const addElement = () => {
     const newUUID: string = uuidv4();
@@ -35,7 +44,7 @@ export default function FormBuilder({
         value: "",
         required: true,
         style:
-          "h-10  text-sm focus-visible:outline-none   focus-visible:ring-2 focus-visible:bg-white   border-zinc-200 duration-100 placeholder:text-zinc-400 ring-2 ring-transparent focus:bg-white focus-visible:ring-indigo-400 shadow-sm    py-2 px-3 w-full rounded-lg border",
+          "h-10 text-sm focus-visible:outline-none   focus-visible:ring-2 focus-visible:bg-white   border-zinc-200 duration-100 placeholder:text-zinc-400 ring-2 ring-transparent focus:bg-white focus-visible:ring-indigo-400 shadow-sm    py-2 px-3 w-full rounded-lg border",
       },
     };
     setElements((prev) => [...prev, newElement]);
@@ -109,6 +118,17 @@ export default function FormBuilder({
                               updatedElements[index].elementType.label = value;
                               addNewElement(updatedElements);
                             }}
+                            setStyle={(value: string) => {
+                              // const updatedElements = [...elements];
+                              // updatedElements[index].elementType.style +=
+                              //   " " + stileSid;
+                              // alert("sdeidine");
+                              // addNewElement(updatedElements);
+                            }}
+                            isSideBarOpen={(value: boolean, index: number) => {
+                              setIsSideOpen(value);
+                              setInputIndex(index);
+                            }}
                           />
 
                           {errors[item.elementType.label] && (
@@ -123,8 +143,7 @@ export default function FormBuilder({
                   {provided.placeholder}
 
                   <button
-                    className="bg-black font-semibold text-white rounded-lg w-full
-               justify-center items-center p-1 mx-auto flex"
+                    className="bg-black font-semibold text-white rounded-lg w-full justify-center items-center p-1 mx-auto flex"
                     disabled={!preview}
                   >
                     {preview ? (
@@ -156,6 +175,18 @@ export default function FormBuilder({
           Insert element
         </button>
       </div>
+      {isSideOpen && (
+        <Sidebar
+          isOpen={(value: boolean) => {
+            setIsSideOpen(value);
+          }}
+          setStyle={(value: string) => {
+            setStyleSide(value);
+          }}
+        />
+      )}
+      {/* {stileSid} */}
+      {inputIndex}
     </>
   );
 }
