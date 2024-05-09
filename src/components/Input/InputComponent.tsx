@@ -19,19 +19,18 @@ export default function InputComponent({
   required,
   isPassWordRequired,
   setLabel,
-  pattern,
-  setStyle,
-  isSideBarOpen,
+  pattern, 
+  openSideBar,
 }: InputProps & {
   isPassWordRequired?: (value: boolean) => void;
   setLabel?: (value: string) => void;
   deleteIndex?: (index: number) => void;
-  setStyle?: (style: string) => void;
-  isSideBarOpen?: (isOpen: boolean,index:number) => void;
+  openSideBar?: (isOpen: boolean ) => void;
 }) {
-  const [inputValue, setInputValue] = useState(label); // Initialize state with label value if present
+  const [inputValue, setInputValue] = useState(label);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isRequired, setIsRequired] = useState(required);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
     setLabel!(e.target.value);
@@ -107,21 +106,13 @@ export default function InputComponent({
         />
       ) : (
         <>
-          {" "}
           <input
             name={name}
             className={`${style}`}
             type={type}
             placeholder={placeholder}
           />
-          <button
-            type="button"
-            onClickCapture={() => {
-              setStyle!("bg-black");
-            }}
-          >
-            bg-red
-          </button>
+         
         </>
       )}
       {!preview ? (
@@ -129,7 +120,8 @@ export default function InputComponent({
           className="absolute w-6 inline-block text-right h-fit top-0 bottom-0
         translate-y-[50%] my-auto -right-6 opacity-0 group-hover:opacity-100"
           type="button"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          onClick={() => 
+            setIsMenuOpen(!isMenuOpen)}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -158,8 +150,8 @@ export default function InputComponent({
             deleteIndex!(index);
           }}
           index={index}
-          isSideOpen={(value: boolean,index:number) => {
-            isSideBarOpen!(value,index);
+          isSideOpen={(value: boolean) => {
+            openSideBar!(value);  
           }}
         />
       )}

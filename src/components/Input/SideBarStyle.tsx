@@ -9,6 +9,9 @@ const Menus = [
     icon: <BsServer />,
     subMenus: [
       { title: "Service 2", src: "/services/services2", cName: "sub-nav" },
+      { title: "Service 2", src: "/services/services2", cName: "sub-nav" },
+      { title: "Service 2", src: "/services/services2", cName: "sub-nav" },
+      { title: "Service 2", src: "/services/services2", cName: "sub-nav" },
     ],
   },
   {
@@ -52,14 +55,14 @@ const Menus = [
   { title: "w-72", src: "Width 72", icon: <MdAccountCircle /> },
 ];
 
-const Sidebar = ({
+const SideBarStyle = ({
   isOpen,
   setStyle,
 }: {
   isOpen: (isOpen: boolean) => void;
   setStyle?: (style: string) => void;
 }) => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const [subMenuOpen, setSubMenuOpen] = useState(false);
 
   const toggleSidebar = () => {
@@ -67,38 +70,25 @@ const Sidebar = ({
     isOpen(!open);
   };
 
-  const handleSidebarClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.stopPropagation();
+  const handleOverlayClick = () => {
+    setOpen(false);
+    isOpen(false);
   };
 
   return (
-    <div
-      className="h-screen overflow-y-auto absolute items-end justify-end top-0 right-0"
-      onClick={handleSidebarClick}
-    >
-      <button
-        className="fixed lg:hidden z-90 bottom-10 right-8 bg-teal-800 w-10 h-10 rounded-full drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-teal-800   duration-300"
-        onClick={toggleSidebar}
-      >
-        <span className="text-white">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            className="w-6 m-auto"
-            viewBox="0 0 16 16"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M3.646 9.146a.5.5 0 0 1 .708 0L8 12.793l3.646-3.647a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 0-.708zm0-2.292a.5.5 0 0 0 .708 0L8 3.207l3.646 3.647a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 0 0 0 .708z"
-            />
-          </svg>
-        </span>
-      </button>
+    <div className="h-screen overflow-y-auto absolute top-0 right-0">
+      {/* Overlay to close sidebar when clicked outside */}
+      {open && (
+        <div
+          className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50"
+          onClick={handleOverlayClick}
+        />
+      )}
 
       <div
-        className={` ${
-          open ? "w-48 px-2 " : "w-0 "
-        } lg:w-72 bg-teal-800 h-screen   relative duration-500`}
+        className={`${
+          open ? "w-48 px-2 opacity-100 z-30" : "w-0"
+        } lg:w-72 bg-teal-800 h-screen relative duration-500`}
       >
         <div className=" justify-center mt-3">
           <h1
@@ -106,17 +96,34 @@ const Sidebar = ({
               !open && "invisible"
             }`}
           >
+            <button
+              className="fixed lg:hidden z-90 bottom-10 right-8 bg-teal-800 w-10 h-10 rounded-full drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-teal-800   duration-300"
+              onClick={toggleSidebar}
+            >
+              <span className="text-white">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="currentColor"
+                  className="w-6 m-auto"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M3.646 9.146a.5.5 0 0 1 .708 0L8 12.793l3.646-3.647a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 0-.708zm0-2.292a.5.5 0 0 0 .708 0L8 3.207l3.646 3.647a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 0 0 0 .708z"
+                  />
+                </svg>
+              </span>
+            </button>
             LOGO
           </h1>
         </div>
-        <ul className="pt-6 ">
+        <ul className="pt-6">
           {Menus.map((Menu, index) => (
-            <>
+            <React.Fragment key={index}>
               <li
-                key={index}
                 className={`flex  rounded-md p-2 cursor-pointer hover:bg-teal-400 text-white text-sm items-center gap-x-4 ${
                   Menu.gap ? "mt-9" : "mt-2"
-                }  `}
+                }`}
                 onClick={() => {
                   setStyle!(Menu.title);
                 }}
@@ -142,7 +149,7 @@ const Sidebar = ({
                   ))}
                 </ul>
               )}
-            </>
+            </React.Fragment>
           ))}
         </ul>
       </div>
@@ -150,4 +157,4 @@ const Sidebar = ({
   );
 };
 
-export default Sidebar;
+export default SideBarStyle;

@@ -4,7 +4,6 @@ import './App.css';
 import Home from './pages/Home/Home';
 import "tailwindcss/tailwind.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Sidebar from './components/SideBar';
 function App() {
   return (
  

@@ -3,8 +3,7 @@ import React, { useEffect, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import InputComponent from "../../Input/InputComponent";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import Sidebar from "../../SideBar";
-
+import SideBarStyle from "../../Input/SideBarStyle";
 export default function FormBuilder({
   preview,
   allElements,
@@ -19,19 +18,14 @@ export default function FormBuilder({
   submitBtn: string;
 }) {
   const [elements, setElements] = useState<FormElement[]>(allElements);
-  const [stileSid, setStyleSide] = useState("");
+  const [inputIndex, setInputIndex] = useState<number>(0);
+  const [isSideOpen, setIsSideOpen] = useState(false);
+
   const {
     register,
     formState: { errors },
     getValues,
   } = useForm({ mode: "all" });
-  const [isSideOpen, setIsSideOpen] = useState(false);
-  const [inputIndex, setInputIndex] = useState<number>(0);
-  // useEffect(() => {
-  //   const updatedElements = [...elements];
-  //   updatedElements[inputIndex].elementType.style += " " + stileSid;
-  //   addNewElement(updatedElements);
-  // }, [stileSid]);
 
   const addElement = () => {
     const newUUID: string = uuidv4();
@@ -58,6 +52,7 @@ export default function FormBuilder({
   };
 
   function handleOnDragEnd(result: any) {
+    setIsSideOpen(false); // Close sidebar when drag ends
     if (!result.destination) return;
     const items = Array.from(elements);
     const [reorderedItem] = items.splice(result.source.index, 1);
@@ -103,7 +98,7 @@ export default function FormBuilder({
                             getValues={getValues}
                             label={item.elementType.label}
                             deleteIndex={handleDeleteInput}
-                            pattern={item.elementType.pattern} //901-23-4567
+                            pattern={item.elementType.pattern}
                             required={item.elementType.required}
                             style={item.elementType.style}
                             isPassWordRequired={(value: boolean) => {
@@ -118,19 +113,11 @@ export default function FormBuilder({
                               updatedElements[index].elementType.label = value;
                               addNewElement(updatedElements);
                             }}
-                            setStyle={(value: string) => {
-                              // const updatedElements = [...elements];
-                              // updatedElements[index].elementType.style +=
-                              //   " " + stileSid;
-                              // alert("sdeidine");
-                              // addNewElement(updatedElements);
-                            }}
-                            isSideBarOpen={(value: boolean, index: number) => {
-                              setIsSideOpen(value);
+                            openSideBar={(isOpen: boolean) => {
+                              setIsSideOpen(isOpen);
                               setInputIndex(index);
                             }}
                           />
-
                           {errors[item.elementType.label] && (
                             <span className="text-sm text-red-500">
                               This field is required
@@ -163,11 +150,7 @@ export default function FormBuilder({
         </form>
       </div>
 
-      <div
-        className="container w-full 
-      shadow-md
-      h-full bg-white font-semibold rounded-lg border mt-4 mx-auto flex justify-center items-center"
-      >
+      <div className="container w-full shadow-md h-full bg-white font-semibold rounded-lg border mt-4 mx-auto flex justify-center items-center">
         <button
           className="bg-gray-300 w-1/4 rounded-lg m-2 p-1"
           onClick={addElement}
@@ -176,17 +159,17 @@ export default function FormBuilder({
         </button>
       </div>
       {isSideOpen && (
-        <Sidebar
+        <SideBarStyle
           isOpen={(value: boolean) => {
             setIsSideOpen(value);
           }}
           setStyle={(value: string) => {
-            setStyleSide(value);
+            const updatedElements = [...elements];
+            updatedElements[inputIndex].elementType.style += " " + value;
+            addNewElement(updatedElements);
           }}
         />
       )}
-      {/* {stileSid} */}
-      {inputIndex}
     </>
   );
 }
