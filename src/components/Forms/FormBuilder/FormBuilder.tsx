@@ -1,9 +1,10 @@
 import { v4 as uuidv4 } from "uuid";
 import React, { useEffect, useState } from "react";
-import { FieldValues, useForm } from "react-hook-form";
-import InputComponent from "../../Input/InputComponent";
+import { useForm } from "react-hook-form";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import InputComponent from "../../Input/InputComponent";
 import SideBarStyle from "../../Input/SideBarStyle";
+
 export default function FormBuilder({
   preview,
   allElements,
@@ -27,6 +28,10 @@ export default function FormBuilder({
     getValues,
   } = useForm({ mode: "all" });
 
+  useEffect(() => {
+    setElements(allElements);
+  }, [allElements]);
+
   const addElement = () => {
     const newUUID: string = uuidv4();
     const newElement = {
@@ -34,11 +39,11 @@ export default function FormBuilder({
         type: "text",
         label: "Label",
         name: newUUID,
-        placeholder: "enter your data",
+        placeholder: "Enter your data",
         value: "",
         required: true,
         style:
-          "h-10 text-sm focus-visible:outline-none   focus-visible:ring-2 focus-visible:bg-white   border-zinc-200 duration-100 placeholder:text-zinc-400 ring-2 ring-transparent focus:bg-white focus-visible:ring-indigo-400 shadow-sm    py-2 px-3 w-full rounded-lg border",
+          "h-10 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:bg-white border-zinc-200 duration-100 placeholder:text-zinc-400 ring-2 ring-transparent focus:bg-white focus-visible:ring-indigo-400 shadow-sm py-2 px-3 w-full rounded-lg border",
       },
     };
     setElements((prev) => [...prev, newElement]);
@@ -51,15 +56,14 @@ export default function FormBuilder({
     addNewElement(updatedElements);
   };
 
-  function handleOnDragEnd(result: any) {
-    setIsSideOpen(false); // Close sidebar when drag ends
+  const handleOnDragEnd = (result: any) => {
     if (!result.destination) return;
     const items = Array.from(elements);
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
     setElements(items);
     addNewElement(items);
-  }
+  };
 
   return (
     <>
@@ -67,7 +71,7 @@ export default function FormBuilder({
         <form className="p-4 m-2 w-full mx-auto ">
           <DragDropContext onDragEnd={handleOnDragEnd}>
             <Droppable droppableId="data" type="COLUMN" direction="vertical">
-              {(provided, snapshot) => (
+              {(provided) => (
                 <div
                   className="w-1/4 mx-auto"
                   ref={provided.innerRef}
@@ -89,23 +93,16 @@ export default function FormBuilder({
                         >
                           <InputComponent
                             key={item.elementType.name}
-                            preview={preview}
-                            name={item.elementType.name}
-                            type={item.elementType.type}
                             index={index}
-                            placeholder={item.elementType.placeholder}
-                            register={register}
+                            preview={preview}
+                            {...item.elementType}
                             getValues={getValues}
-                            label={item.elementType.label}
+                            register={register}
                             deleteIndex={handleDeleteInput}
-                            pattern={item.elementType.pattern}
-                            required={item.elementType.required}
-                            style={item.elementType.style}
                             isPassWordRequired={(value: boolean) => {
                               const updatedElements = [...elements];
-                              updatedElements[
-                                index
-                              ].elementType.required = value;
+                              updatedElements[index].elementType.required =
+                                value;
                               addNewElement(updatedElements);
                             }}
                             setLabel={(value: string) => {
@@ -137,7 +134,7 @@ export default function FormBuilder({
                       submitBtn
                     ) : (
                       <input
-                        className="outline-none  shadow-md bg-transparent w-full text-center"
+                        className="outline-none shadow-md bg-transparent w-full text-center"
                         value={submitBtn}
                         onChange={(e) => setSubmitBtn(e.target.value)}
                       />
@@ -158,6 +155,7 @@ export default function FormBuilder({
           Insert element
         </button>
       </div>
+
       {isSideOpen && (
         <SideBarStyle
           isOpen={(value: boolean) => {

@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import React, { useState } from "react";
 import PopUpMenu from "./PopUpMenu";
 
 export default function InputComponent({
@@ -19,21 +19,20 @@ export default function InputComponent({
   required,
   isPassWordRequired,
   setLabel,
-  pattern, 
+  pattern,
   openSideBar,
 }: InputProps & {
   isPassWordRequired?: (value: boolean) => void;
   setLabel?: (value: string) => void;
   deleteIndex?: (index: number) => void;
-  openSideBar?: (isOpen: boolean ) => void;
+  openSideBar?: (isOpen: boolean) => void;
 }) {
   const [inputValue, setInputValue] = useState(label);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isRequired, setIsRequired] = useState(required);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
-    setLabel!(e.target.value);
+    setLabel && setLabel(e.target.value);
   };
 
   const regPattern = pattern
@@ -44,7 +43,7 @@ export default function InputComponent({
 
   return (
     <div className="relative mb-2 group">
-      {!preview ? (
+      {!preview && (
         <button
           type="button"
           className="absolute -left-5 flex-none mt-3 cursor-grab duration-150
@@ -70,9 +69,8 @@ export default function InputComponent({
             <circle cx="15" cy="19" r="1"></circle>
           </svg>
         </button>
-      ) : (
-        ""
       )}
+
       <label>
         {preview ? (
           <>{label}</>
@@ -89,39 +87,33 @@ export default function InputComponent({
       {preview ? (
         <input
           {...register(name, {
-            required: {
-              value: isRequired,
-              message: "Name is required",
-            },
+            required: { value: required, message: "Name is required" },
             minLength,
             maxLength,
             disabled,
             min,
             max,
-            pattern: regPattern ? regPattern : undefined,
+            pattern: regPattern,
           })}
-          className={`${style}`}
+          className={style}
           type={type}
           placeholder={placeholder}
         />
       ) : (
-        <>
-          <input
-            name={name}
-            className={`${style}`}
-            type={type}
-            placeholder={placeholder}
-          />
-         
-        </>
+        <input
+          name={name}
+          className={style}
+          type={type}
+          placeholder={placeholder}
+        />
       )}
-      {!preview ? (
+
+      {!preview && (
         <button
           className="absolute w-6 inline-block text-right h-fit top-0 bottom-0
         translate-y-[50%] my-auto -right-6 opacity-0 group-hover:opacity-100"
           type="button"
-          onClick={() => 
-            setIsMenuOpen(!isMenuOpen)}
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -134,25 +126,16 @@ export default function InputComponent({
             <path d="M8 2a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM8 6.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM9.5 12.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0Z"></path>
           </svg>
         </button>
-      ) : (
-        ""
       )}
+
       {isMenuOpen && (
         <PopUpMenu
-          required={required!}
-          isOpen={(value: boolean) => {
-            setIsMenuOpen(value);
-          }}
-          isPassWordRequired={(value: boolean) => {
-            isPassWordRequired!(value);
-          }}
-          deleteIndex={(index: number) => {
-            deleteIndex!(index);
-          }}
+          required={required}
+          isOpen={(value: boolean) => setIsMenuOpen(value)}
+          isPassWordRequired={(value: boolean) =>   isPassWordRequired!(value)}
+          deleteIndex={(index: number) => deleteIndex && deleteIndex(index)}
           index={index}
-          isSideOpen={(value: boolean) => {
-            openSideBar!(value);  
-          }}
+          isSideOpen={(value: boolean) => openSideBar && openSideBar(value)}
         />
       )}
     </div>

@@ -8,7 +8,7 @@ export default function PopUpMenu({
   deleteIndex,
   isPassWordRequired,
 }: {
-  required: boolean;
+  required?: boolean;
   isOpen: (value: boolean) => void;
   isSideOpen: (value: boolean ) => void;
   isPassWordRequired: (value: boolean) => void;
