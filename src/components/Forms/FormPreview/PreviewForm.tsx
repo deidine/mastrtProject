@@ -40,20 +40,23 @@ export default function PreviewForm({
               index={index}
               placeholder={item.elementType.placeholder}
               register={register}
-              getValues={getValues}
+              pattern={item.elementType.pattern}
+              
               label={item.elementType.label}
               style={item.elementType.style}
               required={item.elementType.required}
             />
 
+
             {errors[item.elementType.name] && preview && (
               <span className="text-sm text-red-500">
                 {item.elementType.label} is required
+                {errors[item.elementType.name]?.message && <>e</>}
               </span>
             )}
           </div>
         ))}
-        
+
         <button
           className="bg-black font-semibold text-white rounded-lg  w-1/4
                justify-center items-center p-1 mx-auto flex"

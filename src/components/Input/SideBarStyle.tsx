@@ -4,14 +4,12 @@ import { BsChevronDown, BsServer } from "react-icons/bs";
 
 const Menus = [
   {
-    title: "Services",
-    src: "Services",
+    title: "Test",
+    src: "Test",
     icon: <BsServer />,
     subMenus: [
       { title: "Service 2", src: "/services/services2", cName: "sub-nav" },
-      { title: "Service 2", src: "/services/services2", cName: "sub-nav" },
-      { title: "Service 2", src: "/services/services2", cName: "sub-nav" },
-      { title: "Service 2", src: "/services/services2", cName: "sub-nav" },
+      { title: "Service 2", src: "/services/services2", cName: "sub-nav" }, 
     ],
   },
   {
@@ -24,43 +22,26 @@ const Menus = [
     title: "text-purple-500",
     src: "Text Color Purple",
     icon: <MdAccountCircle />,
-  },
+  }  
+];
+
+const Pattern = [
   {
-    title: "border-indigo-500",
-    src: "Border Color Indigo",
+    title: "URL Pattern",
+    pattern: "^(https?|ftp):\\/\\/[^\\s/$.?#].[^\\s]*$",
     icon: <MdAccountCircle />,
   },
-  { title: "p-8", src: "Padding 8", icon: <MdAccountCircle /> },
-  { title: "m-8", src: "Margin 8", icon: <MdAccountCircle /> },
-  { title: "w-64", src: "Width 64", icon: <MdAccountCircle /> },
-  { title: "h-24", src: "Height 24", icon: <MdAccountCircle /> },
-  {
-    title: "bg-gray-500",
-    src: "Background Gray",
-    gap: true,
-    icon: <MdAccountCircle />,
-  },
-  {
-    title: "text-green-500",
-    src: "Text Color Green",
-    icon: <MdAccountCircle />,
-  },
-  {
-    title: "border-red-500",
-    src: "Border Color Red",
-    icon: <MdAccountCircle />,
-  },
-  { title: "p-12", src: "Padding 12", icon: <MdAccountCircle /> },
-  { title: "m-12", src: "Margin 12", icon: <MdAccountCircle /> },
-  { title: "w-72", src: "Width 72", icon: <MdAccountCircle /> },
+  // Add more patterns here as needed
 ];
 
 const SideBarStyle = ({
   isOpen,
   setStyle,
+  setPattern
 }: {
   isOpen: (isOpen: boolean) => void;
   setStyle?: (style: string) => void;
+  setPattern: (pattern: string) => void;
 }) => {
   const [open, setOpen] = useState(true);
   const [subMenuOpen, setSubMenuOpen] = useState(false);
@@ -88,7 +69,7 @@ const SideBarStyle = ({
       <div
         className={`${
           open ? "w-48 px-2 opacity-100 z-30" : "w-0"
-        } lg:w-72 bg-teal-800 h-screen relative duration-500`}
+        } lg:w-72 bg-white h-screen relative duration-500`}
       >
         <div className=" justify-center mt-3">
           <h1
@@ -97,7 +78,7 @@ const SideBarStyle = ({
             }`}
           >
             <button
-              className="fixed lg:hidden z-90 bottom-10 right-8 bg-teal-800 w-10 h-10 rounded-full drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-teal-800   duration-300"
+              className="fixed lg:hidden z-90 bottom-10 right-8 bg-white w-10 h-10 rounded-full drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-white   duration-300"
               onClick={toggleSidebar}
             >
               <span className="text-white">
@@ -118,10 +99,11 @@ const SideBarStyle = ({
           </h1>
         </div>
         <ul className="pt-6">
+          Ajoutter Coulerur
           {Menus.map((Menu, index) => (
             <React.Fragment key={index}>
               <li
-                className={`flex  rounded-md p-2 cursor-pointer hover:bg-teal-400 text-white text-sm items-center gap-x-4 ${
+                className={`flex  rounded-md p-2 cursor-pointer hover:bg-teal-400 text-black text-sm items-center gap-x-4 ${
                   Menu.gap ? "mt-9" : "mt-2"
                 }`}
                 onClick={() => {
@@ -142,7 +124,7 @@ const SideBarStyle = ({
                   {Menu.subMenus.map((subMenuItem, idx) => (
                     <li
                       key={idx}
-                      className="flex px-5 cursor-pointer text-center text-sm text-gray-200 py-1"
+                      className="flex px-5 cursor-pointer hover:bg-teal-400 text-center text-sm text-black py-1"
                     >
                       {subMenuItem.title}
                     </li>
@@ -150,6 +132,25 @@ const SideBarStyle = ({
                 </ul>
               )}
             </React.Fragment>
+          ))}
+        </ul>
+        <br />
+        <hr />
+Ajoutter Pattern
+        <ul>
+          {Pattern.map((item, index) => (
+            <li
+              key={index}
+              className={`flex  rounded-md p-2 cursor-pointer hover:bg-teal-400 text-black text-sm items-center gap-x-4 ${
+                item.icon ? "mt-9" : "mt-2"
+              }`}
+              onClick={() => {
+                setPattern(item.pattern);
+              }}
+            >
+              {item.icon}
+              <span className="flex-1">{item.title}</span>
+            </li>
           ))}
         </ul>
       </div>

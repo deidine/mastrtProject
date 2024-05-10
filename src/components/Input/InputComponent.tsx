@@ -35,12 +35,8 @@ export default function InputComponent({
     setLabel && setLabel(e.target.value);
   };
 
-  const regPattern = pattern
-    ? typeof pattern === "string"
-      ? new RegExp(pattern)
-      : { value: new RegExp(pattern.value), message: pattern.message }
-    : undefined;
 
+  
   return (
     <div className="relative mb-2 group">
       {!preview && (
@@ -93,7 +89,10 @@ export default function InputComponent({
             disabled,
             min,
             max,
-            pattern: regPattern,
+            pattern: {
+              value:  new RegExp(pattern!), 
+              message: "Invalid input",  
+            },
           })}
           className={style}
           type={type}

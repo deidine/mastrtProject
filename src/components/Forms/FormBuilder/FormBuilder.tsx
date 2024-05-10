@@ -22,12 +22,6 @@ export default function FormBuilder({
   const [inputIndex, setInputIndex] = useState<number>(0);
   const [isSideOpen, setIsSideOpen] = useState(false);
 
-  const {
-    register,
-    formState: { errors },
-    getValues,
-  } = useForm({ mode: "all" });
-
   useEffect(() => {
     setElements(allElements);
   }, [allElements]);
@@ -42,6 +36,7 @@ export default function FormBuilder({
         placeholder: "Enter your data",
         value: "",
         required: true,
+        pattern:"",
         style:
           "h-10 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:bg-white border-zinc-200 duration-100 placeholder:text-zinc-400 ring-2 ring-transparent focus:bg-white focus-visible:ring-indigo-400 shadow-sm py-2 px-3 w-full rounded-lg border",
       },
@@ -96,13 +91,12 @@ export default function FormBuilder({
                             index={index}
                             preview={preview}
                             {...item.elementType}
-                            getValues={getValues}
-                            register={register}
                             deleteIndex={handleDeleteInput}
                             isPassWordRequired={(value: boolean) => {
                               const updatedElements = [...elements];
-                              updatedElements[index].elementType.required =
-                                value;
+                              updatedElements[
+                                index
+                              ].elementType.required = value;
                               addNewElement(updatedElements);
                             }}
                             setLabel={(value: string) => {
@@ -115,11 +109,7 @@ export default function FormBuilder({
                               setInputIndex(index);
                             }}
                           />
-                          {errors[item.elementType.label] && (
-                            <span className="text-sm text-red-500">
-                              This field is required
-                            </span>
-                          )}
+                          {item.elementType.pattern}
                         </div>
                       )}
                     </Draggable>
@@ -164,6 +154,14 @@ export default function FormBuilder({
           setStyle={(value: string) => {
             const updatedElements = [...elements];
             updatedElements[inputIndex].elementType.style += " " + value;
+            addNewElement(updatedElements);
+          }}
+          setPattern={(value: string) => {
+            const updatedElements = [...elements];
+            if(updatedElements[inputIndex].elementType.pattern===null){
+
+              updatedElements[inputIndex].elementType.pattern += value;
+            }
             addNewElement(updatedElements);
           }}
         />

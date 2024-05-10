@@ -1,35 +1,35 @@
-type InputElement = {
-    type: string;
-    name: string;
-    placeholder: string;
-    value?: string;
-    label: string;
-    style?: string;
-    required?: boolean ;
-pattern?:ReactHookFormPropertiesRestrictions<string>,
-  };
-   type ReactHookFormPropertiesRestrictions<T> =
+type ReactHookFormProperties<T> =
   | {
       value: T;
       message: string;
     }
   | T;
 
-    type InputOptions = {
-    isPasswordConfirm?: boolean;
-    minLength?: ReactHookFormPropertiesRestrictions<number>;
-    maxLength?: ReactHookFormPropertiesRestrictions<number>;
-    pattern?: ReactHookFormPropertiesRestrictions<string>;
-    min?: ReactHookFormPropertiesRestrictions<number>;
-    max?: ReactHookFormPropertiesRestrictions<number>;
-    disabled?: boolean;
-    
-  };
-  
-  
-type InputProps = {
-  
-  index: number;
+type InputElement = {
+  type: string;
+  name: string;
+  placeholder: string;
+  value?: string;
+  label: string;
+  style?: string;
+  required?: boolean;
+  pattern?: string ;
+};
 
+type InputOptions = {
+  isPasswordConfirm?: boolean;
+  minLength?: ReactHookFormProperties<number>;
+  maxLength?: ReactHookFormProperties<number>;
+  pattern?: string;
+  // pattern?: ReactHookFormProperties<string>;
+  min?: ReactHookFormProperties<number>;
+  max?: ReactHookFormProperties<number>;
+  disabled?: boolean;
+};
+
+type InputProps = {
+  index: number;
   preview: boolean;
-} & { register: any; getValues: any } & InputElement &InputOptions;
+  register?: any;
+  
+} & InputElement & InputOptions;
