@@ -24,15 +24,25 @@ const Menus = [
     icon: <MdAccountCircle />,
   }  
 ];
-
 const Pattern = [
   {
     title: "URL Pattern",
     pattern: "^(https?|ftp):\\/\\/[^\\s/$.?#].[^\\s]*$",
     icon: <MdAccountCircle />,
   },
-  // Add more patterns here as needed
+  {
+    title: "Email Pattern",
+    pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+    icon: <MdAccountCircle />,
+  },
+  {
+    title: "Phone Number Pattern",
+    pattern: "^(\\+[0-9]{1,3})?[0-9]{7,14}$",
+    icon: <MdAccountCircle />,
+  },
+  // Add more patterns as needed
 ];
+
 
 const SideBarStyle = ({
   isOpen,

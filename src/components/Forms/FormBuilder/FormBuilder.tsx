@@ -108,8 +108,7 @@ export default function FormBuilder({
                               setIsSideOpen(isOpen);
                               setInputIndex(index);
                             }}
-                          />
-                          {item.elementType.pattern}
+                          /> 
                         </div>
                       )}
                     </Draggable>
@@ -158,10 +157,9 @@ export default function FormBuilder({
           }}
           setPattern={(value: string) => {
             const updatedElements = [...elements];
-            if(updatedElements[inputIndex].elementType.pattern===null){
-
+             
               updatedElements[inputIndex].elementType.pattern += value;
-            }
+           
             addNewElement(updatedElements);
           }}
         />

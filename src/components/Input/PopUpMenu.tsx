@@ -27,7 +27,7 @@ export default function PopUpMenu({
         setIsMenuOpen(false);
         isOpen(false);
         }
-      event.stopPropagation(); // Stop propagation to prevent event reaching document level
+      event.stopPropagation(); 
     };
 
     window.addEventListener("mousedown", handleOutsideClick);
