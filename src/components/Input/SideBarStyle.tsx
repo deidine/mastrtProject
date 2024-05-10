@@ -118,6 +118,8 @@ const SideBarStyle = ({
                 }`}
                 onClick={() => {
                   setStyle!(Menu.title);
+                  setOpen(false);
+                  isOpen(false);
                 }}
               >
                 {Menu.icon ? Menu.icon : <MdOutlineDashboard />}
@@ -156,6 +158,8 @@ Ajoutter Pattern
               }`}
               onClick={() => {
                 setPattern(item.pattern);
+                setOpen(false);
+                isOpen(false);
               }}
             >
               {item.icon}
