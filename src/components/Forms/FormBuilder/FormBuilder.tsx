@@ -38,7 +38,10 @@ export default function FormBuilder({
         required: true,
         pattern:"",
         style:
-          "h-10 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:bg-white border-zinc-200 duration-100 placeholder:text-zinc-400 ring-2 ring-transparent focus:bg-white focus-visible:ring-indigo-400 shadow-sm py-2 px-3 w-full rounded-lg border",
+          `h-10 text-sm focus-visible:outline-none focus-visible:ring-2
+           focus-visible:bg-white border-zinc-200 duration-100 placeholder:text-zinc-400 ring-2 
+           ring-transparent focus:bg-white focus-visible:ring-indigo-400 shadow-sm py-2 px-3 w-full
+            rounded-lg border`,
       },
     };
     setElements((prev) => [...prev, newElement]);
@@ -149,20 +152,21 @@ export default function FormBuilder({
         <SideBarStyle
           isOpen={(value: boolean) => {
             setIsSideOpen(value);
-          }}
+          } }
           setStyle={(value: string) => {
             const updatedElements = [...elements];
             updatedElements[inputIndex].elementType.style += " " + value;
             addNewElement(updatedElements);
-          }}
+          } }
           setPattern={(value: string) => {
             const updatedElements = [...elements];
-             
+            if (updatedElements[inputIndex].elementType.pattern == "") {
+
               updatedElements[inputIndex].elementType.pattern += value;
-           
+            }
+
             addNewElement(updatedElements);
-          }}
-        />
+          } } label={elements[inputIndex].elementType.label}        />
       )}
     </>
   );

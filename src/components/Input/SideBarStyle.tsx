@@ -1,57 +1,75 @@
-import React, { useState } from "react";
-import { MdOutlineDashboard, MdAccountCircle } from "react-icons/md";
+import React, { ReactNode, useState } from "react";
+import { MdOutlineDashboard, MdOutlineFormatColorFill } from "react-icons/md";
 import { BsChevronDown, BsServer } from "react-icons/bs";
+// import { ToastContainer, toast } from "react-toastify";
+// import "react-toastify/dist/ReactToastify.css";
+type MenuItem = {
+  title: string;
 
-const Menus = [
+  icon: JSX.Element;
+  subMenus?: { title: string; cName: string }[];
+  gap?: boolean;
+};
+type PatternItem = {
+  title: string;
+  pattern: string;
+  icon: ReactNode;
+};
+ 
+
+const Menus: MenuItem[] = [
   {
-    title: "Test",
-    src: "Test",
+    title: "text color",
     icon: <BsServer />,
     subMenus: [
-      { title: "Service 2", src: "/services/services2", cName: "sub-nav" },
-      { title: "Service 2", src: "/services/services2", cName: "sub-nav" }, 
+      { title: "text-purple-500", cName: "sub-nav" },
+      { title: "text-purple-500", cName: "sub-nav" },
     ],
   },
   {
     title: "bg-yellow-500",
-    src: "Background Yellow",
     gap: true,
-    icon: <MdAccountCircle />,
+    icon: <MdOutlineFormatColorFill />,
   },
   {
     title: "text-purple-500",
-    src: "Text Color Purple",
-    icon: <MdAccountCircle />,
-  }  
+    icon: <MdOutlineFormatColorFill />,
+  },
 ];
-const Pattern = [
+
+const Pattern: PatternItem[] = [
   {
     title: "URL Pattern",
-    pattern: "^(https?|ftp):\\/\\/[^\\s/$.?#].[^\\s]*$",
-    icon: <MdAccountCircle />,
+    pattern: " /^(?:(\d{3}))?[-.\s]?(\d{3})[-.\s]?(\d{4})$/",
+    icon: <MdOutlineFormatColorFill />,
   },
   {
     title: "Email Pattern",
     pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
-    icon: <MdAccountCircle />,
+    icon: <MdOutlineFormatColorFill />,
   },
   {
+    
     title: "Phone Number Pattern",
-    pattern: "^(\\+[0-9]{1,3})?[0-9]{7,14}$",
-    icon: <MdAccountCircle />,
+    pattern: "/^\\(?([0-9]{3})\\)?[-.\\s]?([0-9]{3})[-.\\s]?([0-9]{4})$/",
+    // 1234567890
+    // 123-456-7890
+    // 123.456.7890
+    // 123 456 7890
+    // (123) 456 7890
+    icon: <MdOutlineFormatColorFill />,
   },
-  // Add more patterns as needed
 ];
-
-
 const SideBarStyle = ({
   isOpen,
   setStyle,
-  setPattern
+  setPattern,
+  label,
 }: {
   isOpen: (isOpen: boolean) => void;
   setStyle?: (style: string) => void;
   setPattern: (pattern: string) => void;
+  label: string;
 }) => {
   const [open, setOpen] = useState(true);
   const [subMenuOpen, setSubMenuOpen] = useState(false);
@@ -67,8 +85,8 @@ const SideBarStyle = ({
   };
 
   return (
-    <div className="h-screen overflow-y-auto absolute top-0 right-0">
-      {/* Overlay to close sidebar when clicked outside */}
+    // if i add w-full it be in left screen
+    <aside className="inline-flex h-screen overflow-y-auto absolute top-0 right-0">
       {open && (
         <div
           className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50"
@@ -83,7 +101,7 @@ const SideBarStyle = ({
       >
         <div className=" justify-center mt-3">
           <h1
-            className={`text-white  font-medium text-2xl text-center duration-200 ${
+            className={`text-black  font-medium text-2xl text-center duration-200 ${
               !open && "invisible"
             }`}
           >
@@ -105,7 +123,7 @@ const SideBarStyle = ({
                 </svg>
               </span>
             </button>
-            LOGO
+            {label}
           </h1>
         </div>
         <ul className="pt-6">
@@ -146,9 +164,9 @@ const SideBarStyle = ({
             </React.Fragment>
           ))}
         </ul>
-        <br />
         <hr />
-Ajoutter Pattern
+        <br />
+        Ajoutter Pattern
         <ul>
           {Pattern.map((item, index) => (
             <li
@@ -168,7 +186,7 @@ Ajoutter Pattern
           ))}
         </ul>
       </div>
-    </div>
+    </aside>
   );
 };
 

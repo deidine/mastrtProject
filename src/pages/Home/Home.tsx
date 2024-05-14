@@ -9,8 +9,8 @@ export default function Home() {
   const [preview, setPreview] = useState(false);
 
   return (
-    <div>
-      <div className="py-3 border-b max-w-2xl mx-auto mt-3 border shadow-sm rounded-xl">
+    <div >
+      <div className="w-full h-full  py-3 border-b max-w-2xl mx-auto mt-3 border shadow-sm rounded-xl">
 
         <div dir="ltr" data-orientation="horizontal" className="w-60 mx-auto">
           <div className="inline-flex gap-x-3 h-10 items-center justify-center p-1 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400 w-full rounded-lg text-sm bg-zinc-50">

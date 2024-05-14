@@ -31,6 +31,7 @@ export default function PreviewForm({
         className="p-4 m-2 w-full mx-auto"
         onSubmit={handleSubmit(onSubmit)}
       >
+        
         {elements.map((item, index) => (
           <div key={index} className="w-1/4 mx-auto">
             <InputComponent

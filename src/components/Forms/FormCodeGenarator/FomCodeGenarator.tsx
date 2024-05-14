@@ -8,17 +8,27 @@ const FormGenerator = ({ allElements }: CodeGeneratorProps) => {
   const [componentCode, setComponentCode] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const generateComponentCode = () => {
+  const downloadCode = () => {
+    const element = document.createElement("a");
+    const file = new Blob([componentCode], {type: 'text/plain'});
+    element.href = URL.createObjectURL(file);
+    element.download = "generated_code.tsx";
+    document.body.appendChild(element); // Required for this to work in Firefox
+    element.click();
+  };
+
+const generateComponentCode = () => {
+
     const componentCode = allElements.map((input, index) => {
       return `
         <label>${input.elementType.label}</label>
         <input
           key={${index}}
-          {...register("${input.elementType.name}", {
+          {...register("${"input"+input.elementType.name.replaceAll("-","_")}", {
             required: { value: ${input.elementType.required}, message: "Name is required" },
              
             pattern: {
-              value: new RegExp("${input.elementType.pattern}"),
+              value: /${input.elementType.pattern}/,
               message: "Invalid input",
             },
           })}
@@ -26,6 +36,12 @@ const FormGenerator = ({ allElements }: CodeGeneratorProps) => {
           type="${input.elementType.type}"
           placeholder="${input.elementType.placeholder}"
         />
+        {errors.${"input"+input.elementType.name.replaceAll("-","_")} && (
+          <span className="text-sm text-red-500">
+            is required
+            {errors.${"input"+input.elementType.name.replaceAll("-","_")}?.message && <>e</>}
+          </span>
+        )}<br/>
       `;
     });
 
@@ -57,12 +73,7 @@ const FormGenerator = ({ allElements }: CodeGeneratorProps) => {
                   ${componentCode.join("\n")}
                 </div>
               </div>
-              {errors.name && (
-                <span className="text-sm text-red-500">
-                  is required
-                  {errors.name?.message && <>e</>}
-                </span>
-              )}
+             
               <br />
               <button
                 type="submit"
@@ -107,14 +118,17 @@ const FormGenerator = ({ allElements }: CodeGeneratorProps) => {
         <div className="fixed inset-0 z-10 flex overflow-y-auto items-center w-full justify-center bg-gray-900 bg-opacity-50">
           <div className="bg-white p-8 rounded-lg shadow-lg max-w-md">
             <h2 className="text-xl font-semibold mb-4">Generated Form Code</h2>
-            <pre>{componentCode}</pre>
+            <code>{componentCode}</code>  
             <div className="flex justify-between">
               <button
                 className="mt-4 bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-800"
                 onClick={copyToClipboard}
               >
-                Copy
+                Copy Code
               </button>
+              <button
+                className="mt-4 bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-800"
+                onClick={downloadCode}>Download Code</button>
               <button
                 className="mt-4 bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-800"
                 onClick={() => setIsModalOpen(false)}
